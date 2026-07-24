@@ -23,5 +23,11 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-annotation</artifactId>
+            <!-- 父POM里没有声明这个版本，需要写上 -->
+            <version>3.5.3</version>
+        </dependency>
     </dependencies>
 </project>

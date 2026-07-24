@@ -2,6 +2,7 @@ package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -11,6 +12,7 @@ import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,9 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         log.info("对比=====> {}", employee.getPassword(),password);
         //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
-//        String encodedPassword = passwordEncoder.encode(password);
-
+        // 明文和数据库中的密文进行比对，matches自动获取盐值再对比
         if (!passwordEncoder.matches(password, employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -67,10 +67,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public static void main(String[] args) {
-        // 临时生成加密后的密码。注意：这里直接 new 一个，不需要注入
+//        // 临时生成加密后的密码。注意：这里直接 new 一个，不需要注入
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        String encoded = encoder.encode("123456");
+//        System.out.println("加密后的密码：" + encoded);
+    }
+
+
+    public void save(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setStatus(StatusConstant.ENABLE);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encoded = encoder.encode("123456");
-        System.out.println("加密后的密码：" + encoded);
+        String encode = encoder.encode("123456");
+        employee.setPassword(encode);
     }
 
 }
