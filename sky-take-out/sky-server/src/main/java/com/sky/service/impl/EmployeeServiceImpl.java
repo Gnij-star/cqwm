@@ -14,6 +14,7 @@ import com.sky.exception.BaseException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -119,5 +120,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         pageResult.setRecords(page.getRecords());
         pageResult.setTotal(page.getTotal());
         return pageResult;
+    }
+
+    @Override
+    public void startOrStop(Integer status,Long id){
+        LambdaQueryWrapper<Employee> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Employee::getId,id);
+        Employee employee = employeeMapper.selectOne(wrapper);
+        if(employee != null){
+            employee.setStatus(status);
+            employeeMapper.updateById(employee);
+        }
+
+
     }
 }
