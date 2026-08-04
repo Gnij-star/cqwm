@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 public class MyObjectHandler implements MetaObjectHandler {
-    private static final String FIELD_CREATE_AT = "createAt";
-    private static final String FIELD_UPDATE_AT = "updateAt";
+    private static final String FIELD_CREATE_TIME = "createTime";
+    private static final String FIELD_UPDATE_TIME = "updateTime";
     private static final String FIELD_CREATE_USER = "createUser";
     private static final String FIELD_UPDATE_USER = "updateUser";
 
@@ -20,8 +20,8 @@ public class MyObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject){
         LocalDateTime currentTime = LocalDateTime.now();
         Long currentUser = getCurrentUser();
-        this.strictInsertFill(metaObject,FIELD_CREATE_AT, LocalDateTime.class,currentTime);
-        this.strictInsertFill(metaObject,FIELD_UPDATE_AT, LocalDateTime.class,currentTime);
+        this.strictInsertFill(metaObject,FIELD_CREATE_TIME, LocalDateTime.class,currentTime);
+        this.strictInsertFill(metaObject,FIELD_UPDATE_TIME, LocalDateTime.class,currentTime);
         this.strictInsertFill(metaObject,FIELD_CREATE_USER, Long.class,currentUser);
         this.strictInsertFill(metaObject,FIELD_UPDATE_USER, Long.class,currentUser);
     }
@@ -30,7 +30,7 @@ public class MyObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject){
         LocalDateTime currentTime = LocalDateTime.now();
         Long currentUser = getCurrentUser();
-        this.strictUpdateFill(metaObject,FIELD_UPDATE_AT, LocalDateTime.class,currentTime);
+        this.strictUpdateFill(metaObject,FIELD_UPDATE_TIME, LocalDateTime.class,currentTime);
         this.strictUpdateFill(metaObject,FIELD_UPDATE_USER, Long.class,currentUser);
     }
 

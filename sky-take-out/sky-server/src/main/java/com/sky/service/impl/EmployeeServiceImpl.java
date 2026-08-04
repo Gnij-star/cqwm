@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.EmployeeDTO;
@@ -7,6 +8,7 @@ import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
+import com.sky.exception.BaseException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
@@ -42,14 +44,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         String password = employeeLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
-        Employee employee = employeeMapper.getByUsername(username);
+//        Employee employee = employeeMapper.getByUsername(username);
+
+        LambdaQueryWrapper<Employee> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Employee::getUsername,username);
+        Employee employee = employeeMapper.selectOne(wrapper);
+
         log.info("employee=====> {}", employee);
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
         if (employee == null) {
             //账号不存在
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
-        log.info("对比=====> {}", employee.getPassword(),password);
+        log.info("对比=====> {}，{}", employee.getPassword(),password);
         //密码比对
         // 明文和数据库中的密文进行比对，matches自动获取盐值再对比
         if (!passwordEncoder.matches(password, employee.getPassword())) {
@@ -75,12 +82,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     public void save(EmployeeDTO employeeDTO){
+        String username = employeeDTO.getUsername();
+        LambdaQueryWrapper<Employee> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Employee::getUsername,username);
+        Employee isExistEmployee = employeeMapper.selectOne(wrapper);
+        if(isExistEmployee != null){
+            throw new BaseException(400,"用户名已存在");
+        }
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);
         employee.setStatus(StatusConstant.ENABLE);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encode = encoder.encode("123456");
         employee.setPassword(encode);
+        // employee.setCreateTime(LocalDateTime.now());
+        // employee.setUpdateTime(LocalDateTime.now());
+        // employee.setCreateUser(BaseContext.getCurrentId());
+        // employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.insert(employee);
     }
 
 }

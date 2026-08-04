@@ -4,12 +4,10 @@ package com.sky.exception;
  * 账号不存在异常
  */
 public class AccountNotFoundException extends BaseException {
-
-    public AccountNotFoundException() {
-    }
+    private static final Integer DEFAULT_CODE = 500;
 
     public AccountNotFoundException(String msg) {
-        super(msg);
+        super(DEFAULT_CODE,msg);
     }
 
 }
