@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 public class Result<T> implements Serializable {
 
-    private Integer code; //编码：1成功，0和其它数字为失败
+    private Integer code; //编码：200成功，500和其它数字为失败
     private String msg; //错误信息
     private T data; //数据
 
@@ -36,6 +36,12 @@ public class Result<T> implements Serializable {
         Result result = new Result();
         result.msg = msg;
         result.code = 500;
+        return result;
+    }
+    public static <T> Result<T> error(Integer code, String msg) {
+        Result result = new Result();
+        result.msg = msg;
+        result.code = code;
         return result;
     }
 

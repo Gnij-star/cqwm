@@ -35,6 +35,8 @@ public class MyObjectHandler implements MetaObjectHandler {
     }
 
     private Long getCurrentUser(){
-        return BaseContext.getCurrentId();
+        Long id = BaseContext.getCurrentId();
+        log.info("当前操作用户 ID: {}", id);
+        return id;
     }
 }

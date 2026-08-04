@@ -1,16 +1,19 @@
 package com.sky.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.BaseException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.logging.Logger;
 
@@ -102,4 +106,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
+    @Override
+    public PageResult query(EmployeePageQueryDTO employeePageQueryDTO) {
+        Page<Employee> page = new Page<>(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
+        LambdaQueryWrapper<Employee> wrapper = new LambdaQueryWrapper<>();
+        if(StringUtils.hasText(employeePageQueryDTO.getName())){
+            wrapper.like(Employee::getName,employeePageQueryDTO.getName())
+                    .orderByDesc(Employee::getCreateTime);
+        }
+        employeeMapper.selectPage(page,wrapper);
+        PageResult pageResult = new PageResult();
+        pageResult.setRecords(page.getRecords());
+        pageResult.setTotal(page.getTotal());
+        return pageResult;
+    }
 }
