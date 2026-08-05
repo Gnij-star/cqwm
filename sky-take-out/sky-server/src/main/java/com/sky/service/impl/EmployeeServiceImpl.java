@@ -16,6 +16,7 @@ import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.EmployeeService;
+import com.sky.vo.EmployeeVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -26,7 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -115,11 +118,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             wrapper.like(Employee::getName,employeePageQueryDTO.getName())
                     .orderByDesc(Employee::getCreateTime);
         }
-        employeeMapper.selectPage(page,wrapper);
-        PageResult pageResult = new PageResult();
-        pageResult.setRecords(page.getRecords());
-        pageResult.setTotal(page.getTotal());
-        return pageResult;
+        employeeMapper.selectPage(page, wrapper);
+        List<EmployeeVO> voList = page.getRecords().stream().map(item->{
+            EmployeeVO vo = new EmployeeVO();
+            BeanUtils.copyProperties(item,vo);
+            return vo;
+        }).collect(Collectors.toList());
+
+        return new PageResult(page.getTotal(),voList);
     }
 
     @Override
@@ -131,7 +137,34 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setStatus(status);
             employeeMapper.updateById(employee);
         }
+    }
 
+    @Override
+    public EmployeeDTO getById(Long id){
+        Employee employee = employeeMapper.selectById(id);
+        if(employee == null){
+            throw new BaseException("用户不存在");
+        }
+        EmployeeDTO dto = new EmployeeDTO();
+        BeanUtils.copyProperties(employee,dto);
+        return dto;
+    }
 
+    @Override
+    public EmployeeDTO update(Long id,EmployeeDTO employeeDTO){
+        Employee isExit = employeeMapper.selectById(id);
+        if(isExit == null){
+            throw new BaseException("用户不存在");
+        }
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setId(id);
+        int rows = employeeMapper.updateById(employee);
+        if(rows == 0){
+            throw new BaseException("更新失败");
+        }
+        EmployeeDTO emp = new EmployeeDTO();
+        BeanUtils.copyProperties(employee,emp);
+        return emp;
     }
 }
