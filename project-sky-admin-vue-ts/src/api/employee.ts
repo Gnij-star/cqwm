@@ -46,9 +46,9 @@ export const addEmployee = (params: any) => {
 }
 
 // 修改---添加员工
-export const editEmployee = (params: any) => {
+export const editEmployee = (id:string,params: any) => {
   return request({
-    url: '/employee',
+    url: `/employee/${id}`,
     method: 'put',
     data: { ...params }
   })

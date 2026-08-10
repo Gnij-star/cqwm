@@ -31,13 +31,11 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: process.env.VUE_APP_URL,
+        // 后端接口本身带 /api 前缀，这里不做 pathRewrite
+        target: process.env.VUE_APP_URL || 'http://localhost:8088',
         ws: false,
         secure: false,
-        changeOrigin: true,
-        pathRewrite:{
-          '^/api':''
-        }
+        changeOrigin: true
       }
     }
   },

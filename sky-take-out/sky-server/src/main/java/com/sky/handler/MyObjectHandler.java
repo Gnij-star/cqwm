@@ -30,8 +30,15 @@ public class MyObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject){
         LocalDateTime currentTime = LocalDateTime.now();
         Long currentUser = getCurrentUser();
-        this.strictUpdateFill(metaObject,FIELD_UPDATE_TIME, LocalDateTime.class,currentTime);
-        this.strictUpdateFill(metaObject,FIELD_UPDATE_USER, Long.class,currentUser);
+//        this.strictUpdateFill(metaObject,FIELD_UPDATE_TIME, LocalDateTime.class,currentTime);
+//        this.strictUpdateFill(metaObject,FIELD_UPDATE_USER, Long.class,currentUser);
+
+//        this.fillStrategy(metaObject, FIELD_UPDATE_TIME, currentTime);
+//        this.fillStrategy(metaObject,FIELD_UPDATE_USER, currentUser);
+
+        this.setFieldValByName(FIELD_UPDATE_TIME, currentTime, metaObject);
+        this.setFieldValByName(FIELD_UPDATE_USER, currentUser, metaObject);
+
     }
 
     private Long getCurrentUser(){

@@ -188,9 +188,9 @@ export default class extends Vue {
             if (!value) {
               callback(new Error('请输入账号'))
             } else {
-              const reg = /^([a-z]|[0-9]){3,20}$/
+              const reg = /^[\u4e00-\u9fa5a-zA-Z0-9]{2,20}$/
               if (!reg.test(value)) {
-                callback(new Error('账号输入不符，请输入3-20个字符'))
+                callback(new Error('账号请输入2-20个汉字、字母或数字'))
               } else {
                 callback()
               }
@@ -271,7 +271,7 @@ export default class extends Vue {
             ...this.ruleForm,
             sex: this.ruleForm.sex === '女' ? '0' : '1'
           }
-          editEmployee(params)
+          editEmployee(this.$route.query.id as string, params)
             .then((res: any) => {
               if (res.data.code === 1) {
                 this.$message.success('员工信息修改成功！')

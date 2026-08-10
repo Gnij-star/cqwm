@@ -109,7 +109,7 @@ public class EmployeeController {
     }
 
     @ApiOperation("查询员工详情")
-    @GetMapping("/detail/{id}")
+    @GetMapping("/{id}")
     public Result<EmployeeDTO> getById(@PathVariable Long id){
         EmployeeDTO result = employeeService.getById(id);
         return Result.success(result);
