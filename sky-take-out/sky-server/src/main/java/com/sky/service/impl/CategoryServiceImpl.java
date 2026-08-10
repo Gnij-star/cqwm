@@ -28,6 +28,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if(StringUtils.hasText(categoryName)){
             wrapper.like(Category::getName,categoryName);
         }
+        if(categoryPageQueryDTO.getType() != null){
+            wrapper.eq(Category::getType,categoryPageQueryDTO.getType());
+        }
+        wrapper.orderByAsc(Category::getSort);
         Integer page = categoryPageQueryDTO.getPage();
         Integer pageSize = categoryPageQueryDTO.getPageSize();
         Page<Category> pageResult = new Page<>(page,pageSize);
