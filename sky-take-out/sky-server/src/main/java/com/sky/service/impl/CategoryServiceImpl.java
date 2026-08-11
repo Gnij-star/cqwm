@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
 import com.sky.exception.BaseException;
@@ -11,6 +12,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -61,4 +63,39 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return Result.success();
     }
 
+
+    @Override
+    @Transactional
+    public void delById(Long id){
+        Category item = categoryMapper.selectById(id);
+        if(item == null){
+            throw new BaseException("分类不存在");
+        }
+        int cols = categoryMapper.deleteById(id);
+        if(cols == 0){
+            throw new BaseException("删除失败");
+        }
+    }
+
+    @Override
+    public CategoryDTO detail(Long id){
+        Category category = categoryMapper.selectById(id);
+        CategoryDTO dto = new CategoryDTO();
+        BeanUtils.copyProperties(category,dto);
+        return dto;
+    }
+
+    @Override
+    @Transactional
+    public CategoryDTO add(CategoryDTO categoryDTO){
+        Category item = new Category();
+        BeanUtils.copyProperties(categoryDTO,item);
+        int cols = categoryMapper.insert(item);
+        if(cols == 0){
+            throw new BaseException("新增失败");
+        }
+        CategoryDTO dto = new CategoryDTO();
+        BeanUtils.copyProperties(item,dto);
+        return dto;
+    }
 }

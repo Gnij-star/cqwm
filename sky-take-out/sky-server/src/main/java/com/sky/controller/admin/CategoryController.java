@@ -34,8 +34,29 @@ public class CategoryController {
     }
 
     @PostMapping("/status/{status}")
-    public Result startOrStop(@PathVariable Integer status, Long id){
+    public Result startOrStop(@PathVariable Integer status, @RequestParam Long id){
         categoryService.startOrStop(status,id);
+        return Result.success();
+    }
+
+    // 路径：/category?id=123
+    @DeleteMapping
+    public Result del(@RequestParam Long id){
+        categoryService.delById(id);
+        return Result.success();
+    }
+
+    // /detail?id=123
+    @GetMapping("/detail")
+    public Result<CategoryDTO> detail(@RequestParam Long id){
+        CategoryDTO categoryDTO = categoryService.detail(id);
+        return Result.success(categoryDTO);
+    }
+
+    // 商务套餐、13、套餐分类
+    @PostMapping
+    public Result add(@RequestBody CategoryDTO categoryDTO){
+        categoryService.add(categoryDTO);
         return Result.success();
     }
 }
