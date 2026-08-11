@@ -9,10 +9,7 @@ import com.sky.service.CategoryService;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/category")
@@ -34,5 +31,11 @@ public class CategoryController {
         PageResult pageResult = categoryService.selectPage(categoryPageQueryDTO);
         return Result.success(pageResult);
 
+    }
+
+    @PostMapping("/status/{status}")
+    public Result startOrStop(@PathVariable Integer status, Long id){
+        categoryService.startOrStop(status,id);
+        return Result.success();
     }
 }
