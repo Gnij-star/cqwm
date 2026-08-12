@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sky.converter.CategoryConverter;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
@@ -22,6 +23,9 @@ import org.springframework.util.StringUtils;
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
     private final CategoryMapper categoryMapper;
+
+    private final CategoryConverter converter;
+
     @Override
     public PageResult selectPage(CategoryPageQueryDTO categoryPageQueryDTO){
             // 查询条件：分类名称/分类类型（菜品分类/套餐分类）
@@ -88,14 +92,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     @Transactional
     public CategoryDTO add(CategoryDTO categoryDTO){
-        Category item = new Category();
-        BeanUtils.copyProperties(categoryDTO,item);
+//        Category item = new Category();
+//        BeanUtils.copyProperties(categoryDTO,item);
+        Category item = converter.toEntity(categoryDTO);
         int cols = categoryMapper.insert(item);
         if(cols == 0){
             throw new BaseException("新增失败");
         }
-        CategoryDTO dto = new CategoryDTO();
-        BeanUtils.copyProperties(item,dto);
+//        CategoryDTO dto = new CategoryDTO();
+//        BeanUtils.copyProperties(item,dto);
+        CategoryDTO dto = converter.toCategoryDTO(item);
         return dto;
     }
 }
