@@ -26,7 +26,7 @@ export const deleCategory = (ids: string) => {
 // 修改接口
 export const editCategory = (params: any) => {
   return request({
-    url: '/category',
+    url: `/category/${params.id}`,
     method: 'put',
     data: { ...params }
   });

@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/category")
 @Slf4j
@@ -58,5 +60,12 @@ public class CategoryController {
     public Result add(@RequestBody CategoryDTO categoryDTO){
         categoryService.add(categoryDTO);
         return Result.success();
+    }
+
+
+    @PutMapping("/{id}")
+    public Result<CategoryDTO> update(@PathVariable Long id,@Valid @RequestBody CategoryDTO categoryDTO){
+        CategoryDTO result = categoryService.update(id,categoryDTO);
+        return Result.success(result);
     }
 }

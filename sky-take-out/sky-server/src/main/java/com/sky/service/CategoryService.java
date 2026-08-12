@@ -17,4 +17,6 @@ public interface CategoryService extends IService<Category> {
     CategoryDTO detail(Long id);
 
     CategoryDTO add(CategoryDTO categoryDTO);
+
+    CategoryDTO update(Long id,CategoryDTO categoryDTO);
 }

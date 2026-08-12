@@ -104,4 +104,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         CategoryDTO dto = converter.toCategoryDTO(item);
         return dto;
     }
+
+
+    @Override
+    @Transactional
+    public CategoryDTO update(Long id,CategoryDTO categoryDTO){
+        Category isExist = categoryMapper.selectById(id);
+        if(isExist == null){
+            throw new BaseException("分类不存在");
+        }
+        Category item = converter.toEntity(categoryDTO);
+        item.setId(id);
+        int rows = categoryMapper.updateById(item);
+        if(rows == 0){
+            throw new BaseException("更新失败");
+        }
+        Category result = categoryMapper.selectById(id);
+        CategoryDTO dto = converter.toCategoryDTO(result);
+        return dto;
+    }
 }
