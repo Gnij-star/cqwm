@@ -20,7 +20,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper,Dish> implements Dis
 
     @Override
     public PageResult page(DishPageQueryDTO dishPageQueryDTO) {
-        Page<Dish> page = new Page<>(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
+        Page<DishVO> page = new Page<>(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         LambdaQueryWrapper<Dish> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.hasText(dishPageQueryDTO.getName())) {
             wrapper.like(Dish::getName, dishPageQueryDTO.getName());
@@ -33,7 +33,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper,Dish> implements Dis
         }
         wrapper.orderByDesc(Dish::getUpdateTime);
 //        Page<Dish> result = dishMapper.selectPage(page, wrapper);
-        Page<DishVO> result = dishMapper.selectPageWithCategory(page,dto);
+        Page<DishVO> result = dishMapper.selectPageWithCategory(page,dishPageQueryDTO);
         return new PageResult(result.getTotal(), result.getRecords());
     }
 }

@@ -39,9 +39,9 @@ public class DishVO implements Serializable {
     //菜品关联的口味
     private List<DishFlavor> flavors = new ArrayList<>();
     //创建人
-    private LocalDateTime createUser;
+    private Long createUser;
     //更新人
-    private LocalDateTime updateUser;
+    private Long updateUser;
 
     //private Integer copies;
 }

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
@@ -67,5 +68,11 @@ public class CategoryController {
     public Result<CategoryDTO> update(@PathVariable Long id,@Valid @RequestBody CategoryDTO categoryDTO){
         CategoryDTO result = categoryService.update(id,categoryDTO);
         return Result.success(result);
+    }
+
+    @GetMapping("/list")
+    public  Result<List<CategoryDTO>> list(@RequestParam(required = false)int type){
+        List<CategoryDTO> list = categoryService.listByType(type);
+        return Result.success(list);
     }
 }

@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
@@ -122,5 +125,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         Category result = categoryMapper.selectById(id);
         CategoryDTO dto = converter.toCategoryDTO(result);
         return dto;
+    }
+
+
+    @Override
+    public List<CategoryDTO> listByType(int type){
+        LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Category::getType,1).eq(Category::getStatus,type).orderByAsc(Category::getId).orderByAsc(Category::getSort);
+        List<Category> list = categoryMapper.selectList(wrapper);
+        return list.stream().map(category->{
+            CategoryDTO dto = new CategoryDTO();
+            BeanUtils.copyProperties(category,dto);
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

@@ -16,7 +16,18 @@
         <result column="image" property="image"/>
         <result column="description" property="description"/>
     </resultMap>
-    <select id="">
-
+    <select id="selectPageWithCategory" resultMap="DishVOMap">
+        select d.*,c.name as category_name from dish d left join category c on d.category_id = c.id
+        <where>
+            <if test="dto.name != null and dto.name != '' ">
+                AND d.name LIKE CONCAT("%",#{dto.name},"%")
+            </if>
+            <if test="dto.categoryId != null">
+                AND d.category = #{dto.categoryId}
+            </if>
+            <if test="dto.status != null">
+                AND d.status = #{dto.status}
+            </if>
+        </where>
     </select>
 </mapper>
