@@ -131,7 +131,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public List<CategoryDTO> listByType(int type){
         LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Category::getType,1).eq(Category::getStatus,type).orderByAsc(Category::getId).orderByAsc(Category::getSort);
+        wrapper.eq(Category::getType,type).eq(Category::getStatus,1).orderByAsc(Category::getId).orderByAsc(Category::getSort);
         List<Category> list = categoryMapper.selectList(wrapper);
         return list.stream().map(category->{
             CategoryDTO dto = new CategoryDTO();

@@ -8,9 +8,9 @@ import com.sky.service.DishService;
 import io.swagger.annotations.ApiModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/dish")
@@ -30,6 +30,19 @@ public class DishController {
         }
         PageResult pageResult = dishService.page(dishPageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    @GetMapping("/{id}")
+    public Result<DishDTO> detail(@PathVariable Long id){
+        DishDTO dto = dishService.detail(id);
+        return Result.success(dto);
+    }
+
+    @PutMapping("/{id}")
+    public Result<DishDTO> update(@PathVariable Long id,@Valid @RequestBody DishDTO dishDTO){
+        dishDTO.setId(id);
+        DishDTO dto = dishService.updateDish(dishDTO);
+        return Result.success(dto);
     }
 
 }

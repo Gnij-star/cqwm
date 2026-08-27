@@ -25,7 +25,7 @@ export const deleteDish = (ids: string) => {
 // 修改接口
 export const editDish = (params: any) => {
   return request({
-    url: '/dish',
+    url: `/dish/${id}`,
     method: 'put',
     data: { ...params }
   })
