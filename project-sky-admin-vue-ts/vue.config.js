@@ -3,8 +3,8 @@ const name = 'Vue Typescript Admin'
 const IS_PROD = ['production', 'development'].includes(process.env.NODE_ENV)
 
 module.exports = {
-  'publicPath': process.env.NODE_ENV === 'production' ? './' : '/', // TODO: Remember to change this to fit your need
-  'lintOnSave': process.env.NODE_ENV === 'development',
+  'publicPath': process.env.NODE_ENV === 'production' ? './' : '/',
+  'lintOnSave': false, // 关闭 ESLint，避免 eslint 模块找不到的问题
   'pwa': {
     'name': name
   },
@@ -17,21 +17,19 @@ module.exports = {
       ]
     }
   },
-  // 开启代理
   devServer: {
     host:'0.0.0.0',
-    public: '0.0.0.0:8888', // 本地的ip:端口号
+    public: '0.0.0.0:8888',
     port: 8888,
     open: true,
     disableHostCheck:true,
-    hot:true,//自动保存
+    hot:true,
     overlay: {
       warnings: false,
       errors: true
     },
     proxy: {
       '/api': {
-        // 后端接口本身带 /api 前缀，这里不做 pathRewrite
         target: process.env.VUE_APP_URL || 'http://localhost:8088',
         ws: false,
         secure: false,
@@ -40,21 +38,25 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
-    config.resolve.symlinks(true) // 修复热更新失效
+    config.resolve.symlinks(true)
+    
+    // ✅ 彻底移除 fibers
+    const sassRule = config.module.rule('scss')
+    sassRule.uses.delete('fibers')
+    
+    const sassRule2 = config.module.rule('sass')
+    sassRule2.uses.delete('fibers')
+    
+    // ✅ 禁用 ESLint 检查（解决 eslint 模块找不到的问题）
+    config.module.rules.delete('eslint')
   },
   configureWebpack: {
     devtool: 'source-map'
   },
-
   css: {
-    // 是否使用css分离插件 ExtractTextPlugin
     extract: IS_PROD,
-    // 开启 CSS source maps?
     sourceMap: false,
-    // css预设器配置项
-    loaderOptions: {
-    },
-    // 启用 CSS modules for all css / pre-processor files.
+    loaderOptions: {},
     modules: false,
-},
-};
+  },
+}
