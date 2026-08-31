@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dish")
@@ -44,5 +48,15 @@ public class DishController {
         DishDTO dto = dishService.updateDish(dishDTO);
         return Result.success(dto);
     }
+
+    @DeleteMapping
+    public Result<Void> delBatch(@RequestParam String ids){
+        String[] idsArray = ids.split(",");
+        List<Long> idsList= Arrays.stream(idsArray).map(Long::parseLong).collect(Collectors.toList());
+        dishService.delBatch(idsList);
+        return Result.success();
+    }
+
+
 
 }

@@ -10,12 +10,15 @@ import com.sky.entity.Dish;
 import com.sky.exception.BaseException;
 import com.sky.mapper.DishMapper;
 import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +73,14 @@ public class DishServiceImpl extends ServiceImpl<DishMapper,Dish> implements Dis
         dishMapper.updateById(dish);
         Dish updateDish=dishMapper.selectById(dto.getId());
         return dishConverter.toDishDTO(updateDish);
+    }
+
+
+    @Override
+    public void delBatch(List<Long> ids){
+        if(ids == null || ids.isEmpty()){
+            throw new BaseException("请选择要删除的菜品");
+        }
+        dishMapper.deleteBatchIds(ids);
     }
 }

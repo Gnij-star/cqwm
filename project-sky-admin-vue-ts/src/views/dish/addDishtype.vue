@@ -393,7 +393,7 @@ export default class extends Vue {
         } else {
           delete params.createTime
           delete params.updateTime
-          editDish(params)
+          editDish(params.id,params)
             .then(res => {
               if (res && res.data && res.data.code === 1) {
                 this.$router.push({ path: '/dish' })

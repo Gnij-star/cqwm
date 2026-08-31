@@ -23,7 +23,7 @@ export const deleteDish = (ids: string) => {
 }
 
 // 修改接口
-export const editDish = (params: any) => {
+export const editDish = (id:string,params: any) => {
   return request({
     url: `/dish/${id}`,
     method: 'put',

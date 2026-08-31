@@ -6,6 +6,8 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 
+import java.util.List;
+
 public interface DishService extends IService<Dish> {
 
     PageResult page(DishPageQueryDTO dishPageQueryDTO);
@@ -13,4 +15,6 @@ public interface DishService extends IService<Dish> {
     DishDTO detail(Long id);
 
     DishDTO updateDish(DishDTO dto);
+
+    void delBatch(List<Long> ids);
 }
