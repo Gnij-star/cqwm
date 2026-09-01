@@ -83,4 +83,13 @@ public class DishServiceImpl extends ServiceImpl<DishMapper,Dish> implements Dis
         }
         dishMapper.deleteBatchIds(ids);
     }
+
+
+    @Override
+    public DishDTO addDish(DishDTO dto){
+        Dish dish = dishConverter.toEntity(dto);
+        dishMapper.insert(dish);
+        Dish newDish = dishMapper.selectById(dish.getId());
+        return dishConverter.toDishDTO(newDish);
+    }
 }

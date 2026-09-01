@@ -57,6 +57,11 @@ public class DishController {
         return Result.success();
     }
 
+    @PostMapping
+    public Result<DishDTO> add( @Valid @RequestBody DishDTO dto){
+        DishDTO dish=dishService.addDish(dto);
+        return Result.success(dish);
+    }
 
 
 }

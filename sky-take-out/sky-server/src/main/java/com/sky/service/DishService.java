@@ -17,4 +17,6 @@ public interface DishService extends IService<Dish> {
     DishDTO updateDish(DishDTO dto);
 
     void delBatch(List<Long> ids);
+
+    DishDTO addDish(DishDTO dto);
 }
