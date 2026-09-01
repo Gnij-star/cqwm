@@ -92,4 +92,12 @@ public class DishServiceImpl extends ServiceImpl<DishMapper,Dish> implements Dis
         Dish newDish = dishMapper.selectById(dish.getId());
         return dishConverter.toDishDTO(newDish);
     }
+
+    @Override
+    public void updateStatus(Integer status,Long id){
+        Dish dish = new Dish();
+        dish.setId(id);
+        dish.setStatus(status);
+        dishMapper.updateById(dish);
+    }
 }
