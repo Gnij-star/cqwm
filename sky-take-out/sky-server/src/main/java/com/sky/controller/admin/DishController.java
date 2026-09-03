@@ -71,4 +71,10 @@ public class DishController {
     }
 
 
+    @GetMapping("/list")
+    public Result<List<DishDTO>> list(@RequestParam Long categoryId){
+        List<DishDTO> list = dishService.list(categoryId);
+        return Result.success(list);
+    }
+
 }

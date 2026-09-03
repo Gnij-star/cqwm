@@ -48,7 +48,11 @@ public class MinioUtils {
                 log.info("存储桶已存在: {}", bucketName);
             }
         } catch (Exception e) {
-            log.error("存储桶初始化失败", e);
+            log.error("存储桶初始化失败，endpoint={}, bucket={}, cause={}",
+                    minioConfig.getEndpoint(),
+                    minioConfig.getBucketName(),
+                    e.getMessage(),
+                    e);
         }
     }
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -100,4 +101,11 @@ public class DishServiceImpl extends ServiceImpl<DishMapper,Dish> implements Dis
         dish.setStatus(status);
         dishMapper.updateById(dish);
     }
+
+    @Override
+    public List<DishDTO> list(Long categoryId){
+        List<Dish> list = dishMapper.selectList(new LambdaQueryWrapper<Dish>().eq(Dish::getCategoryId, categoryId).eq(Dish::getStatus, 1));
+        return list.stream().map(dishConverter::toDishDTO).collect(Collectors.toList());
+    }
+
 }

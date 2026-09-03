@@ -6,13 +6,11 @@ import com.sky.entity.Setmeal;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.MealService;
+import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/setmeal")
@@ -28,4 +26,34 @@ public class MealController {
         return Result.success(pageResult);
     }
 
+//    // 删除数据接口
+//    export const deleteSetmeal = (ids: string) => {
+//        return request({
+//                url: '/setmeal',
+//                method: 'delete',
+//                params: { ids }
+//  })
+//    }
+//
+//// 修改数据接口
+//    export const editSetmeal = (params: any) => {
+//        return request({
+//                url: '/setmeal',
+//                method: 'put',
+//                data: { ...params }
+//  })
+//    }
+//// 新增数据接口
+//    export const addSetmeal = (params: any) => {
+//        return request({
+//                url: '/setmeal',
+//                method: 'post',
+//                data: { ...params }
+//  })
+//    }
+        @PostMapping
+        public Result<SetmealVO> add(@RequestBody SetmealDTO setmealDTO){
+            SetmealVO vo = mealService.add(setmealDTO);
+            return Result.success(vo);
+        }
 }

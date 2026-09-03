@@ -23,7 +23,7 @@
                 AND d.name LIKE CONCAT("%",#{dto.name},"%")
             </if>
             <if test="dto.categoryId != null">
-                AND d.category = #{dto.categoryId}
+                AND d.category_id = #{dto.categoryId}
             </if>
             <if test="dto.status != null">
                 AND d.status = #{dto.status}
