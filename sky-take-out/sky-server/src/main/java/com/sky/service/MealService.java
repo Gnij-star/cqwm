@@ -10,4 +10,6 @@ import com.sky.vo.SetmealVO;
 public interface MealService extends IService<Setmeal> {
     PageResult<SetmealVO> pageQuery(SetmealPageQueryDTO dto);
     SetmealVO add(SetmealDTO dto);
+    SetmealVO updateData(SetmealDTO dto);
+    SetmealVO detail(Long id);
 }

@@ -43,6 +43,12 @@ public class MealController {
 //                data: { ...params }
 //  })
 //    }
+    @PutMapping
+    public Result<SetmealVO> update(@RequestBody SetmealDTO dto){
+        SetmealVO meal = mealService.updateData(dto);
+        return Result.success(meal);
+    }
+
 //// 新增数据接口
 //    export const addSetmeal = (params: any) => {
 //        return request({
@@ -54,6 +60,12 @@ public class MealController {
         @PostMapping
         public Result<SetmealVO> add(@RequestBody SetmealDTO setmealDTO){
             SetmealVO vo = mealService.add(setmealDTO);
+            return Result.success(vo);
+        }
+
+        @GetMapping("/{id}")
+        public Result<SetmealVO> detail(@PathVariable Long id){
+            SetmealVO vo = mealService.detail(id);
             return Result.success(vo);
         }
 }

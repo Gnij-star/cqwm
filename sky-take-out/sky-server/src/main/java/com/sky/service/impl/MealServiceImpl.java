@@ -63,4 +63,32 @@ public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impleme
            }
            return result;
     }
+
+    @Override
+    public SetmealVO updateData(SetmealDTO dto){
+        if(dto.getId()==null){
+            throw new BaseException("id不能为空");
+        }
+        Setmeal meal = new Setmeal();
+        BeanUtils.copyProperties(dto,meal);
+        int rows = setmealMapper.updateById(meal);
+        if(rows==0){
+            throw new BaseException("更新失败");
+        }
+        Setmeal result = new Setmeal();
+        SetmealVO vo = new SetmealVO();
+        BeanUtils.copyProperties(result,vo);
+        return vo;
+    }
+
+    @Override
+    public SetmealVO detail(Long id){
+        if(id == null){
+            throw new BaseException("id不能为空");
+        }
+        Setmeal meal = setmealMapper.selectById(id);
+        SetmealVO vo = new SetmealVO();
+        BeanUtils.copyProperties(meal,vo);
+        return vo;
+    }
 }
