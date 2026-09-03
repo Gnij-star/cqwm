@@ -21,8 +21,8 @@ public class MealController {
     private final MealService mealService;
 
     @GetMapping("/page")
-    public Result<PageResult<SetmealDTO>> page(SetmealPageQueryDTO query){
-        PageResult<SetmealDTO> pageResult =mealService.pageQuery(query);
+    public Result<PageResult<SetmealVO>> page(SetmealPageQueryDTO query){
+        PageResult<SetmealVO> pageResult =mealService.pageQuery(query);
         return Result.success(pageResult);
     }
 

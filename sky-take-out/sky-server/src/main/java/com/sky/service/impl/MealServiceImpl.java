@@ -27,12 +27,16 @@ public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impleme
     private final CategoryMapper categoryMapper;
 
     @Override
-    public PageResult<SetmealDTO> pageQuery(SetmealPageQueryDTO dto){
-        Page<Setmeal> page = new Page<>(dto.getPage(),dto.getPageSize());
-        LambdaQueryWrapper<Setmeal> wrapper = new LambdaQueryWrapper<>();
-        Page<Setmeal> list = setmealMapper.selectPage(page,wrapper);
-        List<SetmealDTO> dtoList = list.getRecords().stream().map(item->{
-            SetmealDTO meal = new SetmealDTO();
+    public PageResult<SetmealVO> pageQuery(SetmealPageQueryDTO dto){
+        // Page<Setmeal> page = new Page<>(dto.getPage(),dto.getPageSize());
+        // LambdaQueryWrapper<Setmeal> wrapper = new LambdaQueryWrapper<>();
+        // Page<Setmeal> list = setmealMapper.selectPage(page,wrapper);
+        // 改成自定义联表查询
+        Page<SetmealVO> page = new Page<>(dto.getPage(),dto.getPageSize());
+        Page<SetmealVO> list = setmealMapper.pageQueryWithCategory(page,dto);
+
+        List<SetmealVO> dtoList = list.getRecords().stream().map(item->{
+            SetmealVO meal = new SetmealVO();
             BeanUtils.copyProperties(item,meal);
             return meal;
         }).collect(Collectors.toList());

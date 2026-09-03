@@ -8,6 +8,6 @@ import com.sky.result.PageResult;
 import com.sky.vo.SetmealVO;
 
 public interface MealService extends IService<Setmeal> {
-    PageResult<SetmealDTO> pageQuery(SetmealPageQueryDTO dto);
+    PageResult<SetmealVO> pageQuery(SetmealPageQueryDTO dto);
     SetmealVO add(SetmealDTO dto);
 }
