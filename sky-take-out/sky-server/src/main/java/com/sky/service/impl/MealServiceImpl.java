@@ -5,17 +5,20 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
-import com.sky.entity.Category;
 import com.sky.entity.Setmeal;
+import com.sky.entity.SetmealDish;
 import com.sky.exception.BaseException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.SetmealMapper;
+import com.sky.mapper.SetmealdishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.MealService;
+import com.sky.service.SetmealdishService;
 import com.sky.vo.SetmealVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +28,8 @@ import java.util.stream.Collectors;
 public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> implements MealService {
     private final SetmealMapper setmealMapper;
     private final CategoryMapper categoryMapper;
+    private final SetmealdishMapper setmealdishMapper;
+    private final SetmealdishService setmealdishService;
 
     @Override
     public PageResult<SetmealVO> pageQuery(SetmealPageQueryDTO dto){
@@ -45,6 +50,7 @@ public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impleme
 
 
     @Override
+    @Transactional
     public SetmealVO add(SetmealDTO dto){
         Setmeal meal = new Setmeal();
         BeanUtils.copyProperties(dto,meal);
@@ -54,17 +60,18 @@ public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impleme
             throw new BaseException("分类id不能为空");
         }
            setmealMapper.insert(meal);
-           Setmeal vo = setmealMapper.selectById(meal.getId());
-           SetmealVO result = new SetmealVO();
-           BeanUtils.copyProperties(vo,result);
-           Category category = categoryMapper.selectById(vo.getCategoryId());
-           if(category != null){
-            result.setCategoryName(category.getName());
-           }
-           return result;
+
+        List<SetmealDish> setmealDishes  = dto.getSetmealDishes();
+        if(setmealDishes != null && !setmealDishes.isEmpty()){
+            setmealDishes.forEach(dish->dish.setSetmealId(meal.getId()));
+            //           批量插入菜品数据到关联表
+            setmealdishService.saveBatch(setmealDishes);
+        }
+        return setmealMapper.getByIdWithDishes(meal.getId());
     }
 
     @Override
+    @Transactional
     public SetmealVO updateData(SetmealDTO dto){
         if(dto.getId()==null){
             throw new BaseException("id不能为空");
@@ -75,10 +82,21 @@ public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impleme
         if(rows==0){
             throw new BaseException("更新失败");
         }
-        Setmeal result = new Setmeal();
-        SetmealVO vo = new SetmealVO();
-        BeanUtils.copyProperties(result,vo);
-        return vo;
+
+        // 先删旧关联，再写入新菜品列表
+        setmealdishService.remove(
+                new LambdaQueryWrapper<SetmealDish>().eq(SetmealDish::getSetmealId, dto.getId())
+        );
+        List<SetmealDish> setmealDishes = dto.getSetmealDishes();
+        if(setmealDishes != null && !setmealDishes.isEmpty()){
+            setmealDishes.forEach(dish -> {
+                dish.setId(null);
+                dish.setSetmealId(dto.getId());
+            });
+            setmealdishService.saveBatch(setmealDishes);
+        }
+
+        return setmealMapper.getByIdWithDishes(dto.getId());
     }
 
     @Override
@@ -86,9 +104,10 @@ public class MealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impleme
         if(id == null){
             throw new BaseException("id不能为空");
         }
-        Setmeal meal = setmealMapper.selectById(id);
-        SetmealVO vo = new SetmealVO();
-        BeanUtils.copyProperties(meal,vo);
+        SetmealVO vo = setmealMapper.getByIdWithDishes(id);
+        if(vo == null){
+            throw new BaseException("套餐不存在");
+        }
         return vo;
     }
 }

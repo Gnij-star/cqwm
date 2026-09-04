@@ -14,6 +14,7 @@
         <!--联表字段-->
         <result column="category_name" property="categoryName"/>
     </resultMap>
+
     <select id="pageQueryWithCategory" resultMap="SetmealVOMap">
         SELECT s.*, c.name AS category_name
         FROM setmeal s
@@ -30,5 +31,44 @@
             </if>
         </where>
         ORDER BY s.update_time DESC
+    </select>
+
+
+    <resultMap id="SetmealdishVOMap" type="com.sky.vo.SetmealVO">
+        <id column="id" property="id"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="status" property="status"/>
+        <result column="description" property="description"/>
+        <result column="image" property="image"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="category_name" property="categoryName"/>
+
+        <collection property="setmealDishes" ofType="com.sky.entity.SetmealDish">
+            <id column="sd_id" property="id" />
+            <result column="setmeal_id" property="setmealId"/>
+            <result column="dish_id" property="dishId"/>
+            <result column="dish_name" property="name"/>
+            <result column="dish_price" property="price"/>
+            <result column="copies" property="copies"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="getByIdWithDishes" resultMap="SetmealdishVOMap">
+        SELECT s.*,
+               c.name AS category_name,
+               sd.id AS sd_id,
+               sd.setmeal_id,
+               sd.dish_id,
+               d.name AS dish_name,
+               d.price AS dish_price,
+               sd.copies
+        FROM setmeal s
+        LEFT JOIN category c ON s.category_id = c.id
+        LEFT JOIN setmeal_dish sd ON s.id = sd.setmeal_id
+        LEFT JOIN dish d ON sd.dish_id = d.id
+        WHERE s.id = #{id}
     </select>
 </mapper>

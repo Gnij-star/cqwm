@@ -7,10 +7,11 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 
 @Mapper
 public interface SetmealMapper extends BaseMapper<Setmeal> {
-    Page<SetmealVO> pageQueryWithCategory(Page<SetmealVO> page, SetmealPageQueryDTO dto);
-
+    Page<SetmealVO> pageQueryWithCategory(Page<SetmealVO> page, @Param("dto") SetmealPageQueryDTO dto);
+    SetmealVO getByIdWithDishes(Long id);
 }
