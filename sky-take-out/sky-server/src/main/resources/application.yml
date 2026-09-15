@@ -53,3 +53,15 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket-name: sky-take-out
+
+
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8080/xxl-job-admin  # 调度中心地址
+    accessToken: default_token                       # 与调度中心保持一致
+    executor:
+      appname: sky-executor               # 执行器名称（重要！）
+      port: 9999                                     # 执行器端口（同一台机器多个执行器需不同端口）
+      logpath: ./logs/xxl-job
+      logretentiondays: 30
