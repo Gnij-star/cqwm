@@ -11,3 +11,8 @@ sky:
     port: 6379
     password: redispwd
     database: 10
+rocketmq:
+    name-server: 127.0.0.1:9876
+    producer:
+      group: sky-producer-group
+      send-message-timeout: 3000

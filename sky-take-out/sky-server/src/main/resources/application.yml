@@ -71,3 +71,11 @@ xxl:
       logpath: ./logs/xxl-job
       logretentiondays: 30
 
+
+
+  rocketmq:
+    name-server: 127.0.0.1:9876
+    producer:
+      group: sky-producer-group
+      send-message-timeout: 3000
+
